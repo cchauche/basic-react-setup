@@ -63,7 +63,7 @@
     entry: path.resolve(__dirname, 'client/example.js'),
     output: {
       filename: 'bundle.js',
-      path: path.resolve(__dirname, 'client'),
+      path: path.resolve(__dirname, 'public'),
     },
   };
   ```
@@ -84,12 +84,59 @@
 ## Use Babel with Webpack
 
 ### What is Babel?
+- Babel is a transpiler. It is going to take your code and apply some kind of conversion to it then output the result. It can be configured in many ways but mostly when we are dealing with it we are using it to transpile jsx for React in to javascript as well as using it to convert our ECMAScript2015+(ES6) code to equivalent ES5 code that all browsers can understand.
 
 ### Installing Babel
 
+- For using React you will need to install the following packages using npm:
+  - `babel-loader` - This connects Babel and Webpack
+  - `@babel/core` - Transpile ES2015+ (ES6) to backwards compatible JavaScript
+  - `@babel/preset-env` - Provides smart default presets for converting your ES6 to ES5
+  - `@babel/preset-react` - Provides default presets for processing React code
+  ```
+  npm install --save-dev babel-loader @babel/core @babel/preset-env @babel/preset-react
+  ```
+
 ### Configuring Webpack and Babel
 
+- Edit `webpack.config.js` by adding the following code to the exports object
+  ```javascript
+  module.exports = {
+    ...
+    // Add the code from here...
+    module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/, //regex to test for .js or .jsx file endings
+        exclude: /node_modules/, //regex that specifies node_modules folder
+        use: {
+          loader: 'babel-loader', //On the files specified by test above use this loader
+          options: { // Additional options specific to the loader
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
+        }
+      }
+    ]
+  }
+  // to here
+    ...
+  }
+  ```
+  > Here we are instructing webpack to use Babel to transpile any files that end with .js or .jsx and Babel will use the presets we've set in options to perform those transformations. We are also telling it not to look in `node_modules/` folder for any files.
+- Now lets run our build script again and see what happens to our bundle
+  ```
+  npm run build
+  ```
+- Notice that the code in `bundle.js` which used to look pretty familiar has now been changed significantly.  Especially looking at the transpiled `Alarm` class you can see that Babel has converted our ES6 class to a functional class.  Also notice that all variable declarations now use `var`.  Babel has modified our code so that it is now compatible with older browsers that might not have adopted ES6 yet.
+
 ## Tie In React
+
+### Install react and react-DOM
+
+### Create Basic React Boilerplate
+- Ok this `example.js` file is all well and good but we came here to build single page web-apps with React. Well the good news is that our project is now set up to build for React we just have to add a couple of files to get a basic React App up and running. 
+- First lets delete `client/example.js` and `client/example2.js`.  They served their purpose well but now are just clutter.
+- 
 
 ## Build Scripts
 
