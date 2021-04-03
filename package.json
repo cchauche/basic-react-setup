@@ -4,7 +4,9 @@
   "description": "## Initialize Project with NPM",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --mode none"
+    "start": "live-server public/",
+    "build": "webpack --watch",
+    "build-prod": "webpack --mode production --no-devtool"
   },
   "repository": {
     "type": "git",
@@ -21,7 +23,12 @@
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.13.13",
     "babel-loader": "^8.2.2",
+    "live-server": "^1.2.1",
     "webpack": "^5.30.0",
     "webpack-cli": "^4.6.0"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }

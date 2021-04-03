@@ -54,7 +54,7 @@
   ```
   npm install webpack webpack-cli --save-dev
   ```
-  > Since we only need webpack for development purposes we save it as a dev-dependency, this is not critical but a good practice to aim for
+  > Since we only need webpack for development purposes we save it as a dev-dependency, this is not critical but a good practice to aim for.  You can easily change this after the fact so don't stress about it
 - We need to provide webpack with some configurations so that it knows what to do with our files, we will write those instructions in a new file called `webpack.config.js` in the root directory of the repo.  Paste the following code in to that file
   ```javascript
   const path = require('path');
@@ -88,7 +88,7 @@
 
 ### Installing Babel
 
-- For using React you will need to install the following packages using npm:
+- For using Babel with javascript and React you will need to install the following packages using npm:
   - `babel-loader` - This connects Babel and Webpack
   - `@babel/core` - Transpile ES2015+ (ES6) to backwards compatible JavaScript
   - `@babel/preset-env` - Provides smart default presets for converting your ES6 to ES5
@@ -96,6 +96,7 @@
   ```
   npm install --save-dev babel-loader @babel/core @babel/preset-env @babel/preset-react
   ```
+  > Again we are saving these as development dependencies
 
 ### Configuring Webpack and Babel
 
@@ -110,8 +111,10 @@
         test: /\.(js|jsx)$/, //regex to test for .js or .jsx file endings
         exclude: /node_modules/, //regex that specifies node_modules folder
         use: {
-          loader: 'babel-loader', //On the files specified by test above use this loader
-          options: { // Additional options specific to the loader
+          //Loader to use on files specified by 'test' above
+          loader: 'babel-loader',
+          // Additional options specific to the loader
+          options: { 
             presets: ['@babel/preset-env', '@babel/preset-react']
           }
         }
@@ -131,14 +134,155 @@
 
 ## Tie In React
 
-### Install react and react-DOM
+### Install React
+
+- To use react you need to install two packages
+  - `react` - This is the core library of React
+  - `react-dom` - Plugs React in to the webpage's DOM
+  ```
+  npm install --save react react-dom
+  ```
+  > This time we used --save because these dependencies are always needed for our code to work not just used during development
 
 ### Create Basic React Boilerplate
-- Ok this `example.js` file is all well and good but we came here to build single page web-apps with React. Well the good news is that our project is now set up to build for React we just have to add a couple of files to get a basic React App up and running. 
+Ok this `example.js` file is all well and good but we came here to build single page web-apps with React. Well the good news is that our project is now set up to build for React we just have to add a couple of files to get a basic React App up and running. 
 - First lets delete `client/example.js` and `client/example2.js`.  They served their purpose well but now are just clutter.
-- 
+- In `public/` create a file called `index.html` and paste the following code in to it
+  ```html
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="styles.css">
+    <title>React From Scratch</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="bundle.js"></script>
+  </body>
+  </html>
+  ```
+- In `public/` create a file called `styles.css` and paste the following code in to it
+  ```css
+  body {
+    text-align: center;
+  }
+  h1 {
+    color: blue;
+  }
+  ```
+- In `client/` create a file called `index.js` and paste the following code in to it
+  ```jsx
+  import React from "react";
+  import ReactDOM from "react-dom";
+  import App from "./App.jsx";
+
+  ReactDOM.render(<App />, document.getElementById("app"));
+  ```
+- In `client/` create a file called `App.jsx` and paste the following code in to it
+  ```jsx
+  import React from "react";
+
+  class App extends React.Component {
+    constructor(props){
+      super(props);
+      this.state = {
+        message: "Check out this bundle.js"
+      }
+    }
+    render(){
+      return(
+        <div className="App">
+          <h1>{this.state.message}</h1>
+        </div>
+      );
+    }
+  }
+
+  export default App;
+  ```
+- You should now have a file structure that looks like this
+  ```
+  reactFromScratch
+  ├── client 
+  │   └── index.js
+  │   └── App.jsx
+  └── public 
+  │   └── index.html
+  │   └── styles.css
+  ├── node_modules
+  ├── .gitignore
+  ├── package-lock.json
+  ├── package.json
+  ├── webpack.config.js
+  └── README.md
+
+  ```
+
+### Update Webpack Configuration
+Now that we have modified our files to create a basic React app we need to make a few tweaks to our webpack configuration.  
+
+- In `webpack.config.js` change the entry point to the root of our React app `client/index.js`
+  ```javascript
+  module.exports = {
+    ...
+    entry: path.resolve(__dirname, 'client/index.js'),
+    ...
+  };
+  ```
+- Since we are still developing our React app we are going to add a couple of options to the webpack configuration that will help us during development. Add these two properties to your `webpack.config.js` file
+  ```javascript
+  module.exports = {
+    ...
+    mode: 'development', // add mode option
+    devtool: 'eval-source-map', // add devtool option
+    ...
+  }
+  ```
+  > Setting `mode` to `'development'` tells webpack to prioritize ease of development when building the bundle.  This is to make it easier to debug your code should you need to find a bug
+
+  > Setting `devtool` to `'eval-source-map'` adds a source map to your bundle.  This means that when you pause your code with the debugger the code you will be looking at will look like the code you've written instead of the often more confusing bundle code.
+
+- In `package.json` we are going to slightly modify our build script and add a  start script to make development easier. Modify the `"scripts"` parameter so it looks like this
+  ```
+  "scripts": {
+    "start": "live-server public/",
+    "build": "webpack --watch"
+  },
+  ```
+  > The `--watch` flag will keep webpack running in the background watching the files for any changes.  If it detects changes to the files it run and build the files again
+
+  > `live-server` is a quick an easy to server your React app and will automatically refresh your browser when it detects a file change
+
+### Test Our New React App
+- If you don't have `live-server` installed globally run
+  ```
+  npm install --save-dev live-server
+  ```
+- Run the build script
+  ```
+  npm run build
+  ```
+- Lets start up our development server
+  ```
+  npm start
+  ```
+## Congratulations! You've set up a React development environnement from scratch! 🎉
+
+*Remember that there are many different ways to configure all of these tools and depending on your projects needs you may need add/modify various parts of the configuration. This is not meant to be an exhaustive or definitive guide instead the hope is that you are left better understanding what the different parts of the tool-chain are doing, how to configure these tools and why those configurations are necessary*
 
 ## Build Scripts
+> If you have gotten to here you have a good base to start developing a new React App.  Content past here is not necessary for development but may come in handy when thinking about deploying your app
+
+Remember how we specified the `mode` option as 'development' in the `webpack.config.js` file, turns out that webpack makes some tradeoffs when it bundles your code for development.  The trade of off for more legible/easier to debug code is slower performance and a larger file size. When we are developing an new app for the most part that is a worthwhile trade off but once we move to deploying our app our priorities change.  Now we want to prioritize user experience which means we want to prioritize performance as well as file size (smaller files load faster). 
+
+Ideally we don't want to have to re-write our webpack configuration when we are actively developing our app and when we are deploying the app. We can accomplish this by writing different scripts for production and for development. In `package.json` lets add a new script called 'build-prod'.
+```
+"build-prod": "webpack --mode production --no-devtool"
+```
+> This script runs webpack setting the `mode` option to `'production'` and adds the `--no-devtool` flag which instructs webpack not to create a source map for easier debugging
+
+
 
 ## [Optional] Add A Server
 

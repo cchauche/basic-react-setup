@@ -1,7 +1,8 @@
 const path = require('path');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'client/example.js'),
+
+  entry: path.resolve(__dirname, 'client/index.js'),
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'public'),
@@ -19,5 +20,7 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  mode: 'development',
+  devtool: 'eval-source-map'
 };
