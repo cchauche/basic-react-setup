@@ -4,9 +4,7 @@
   "description": "## Initialize Project with NPM",
   "main": "index.js",
   "scripts": {
-    "start": "live-server public/",
-    "build": "webpack --watch",
-    "build-prod": "webpack --mode production --no-devtool"
+    "build": "webpack --mode none"
   },
   "repository": {
     "type": "git",
