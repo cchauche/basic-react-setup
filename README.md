@@ -282,11 +282,10 @@ Ideally we don't want to have to re-write our webpack configuration when we are 
 ```
 > This script runs webpack setting the `mode` option to `'production'` and adds the `--no-devtool` flag which instructs webpack not to create a source map for easier debugging
 
-
-
-## [Optional] Add A Server
-
 # Resources
 - [Creating a React App...From Scratch](https://blog.usejournal.com/creating-a-react-app-from-scratch-f3c693b84658) - Walk through linked to by React Docs though its a bit old now (2018)
 - [Create App](https://createapp.dev/) - Web-app that helps you build your webpack and babel config files
-- 
+- [webpack Tutorial: How to Set Up webpack 5 From Scratch](https://www.taniarascia.com/how-to-use-webpack/) - Super in depth tutorial for many of the configurations of webpack
+- [Create A New React App](https://reactjs.org/docs/create-a-new-react-app.html) - From React Docs
+- [webpack Docs](https://webpack.js.org/concepts/)
+- [Babel Docs](https://babeljs.io/docs/en/)
