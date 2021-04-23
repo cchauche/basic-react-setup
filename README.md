@@ -1,5 +1,7 @@
 # Create React App From Scratch
-> This repo was designed for use in a demo for students about how to initialize a React app from scratch
+This repo was designed for use in a demo for students about how to initialize a React app from scratch
+
+>*To see the completed configuration you can look at the ['complete' branch](https://github.com/cchauche/basic-react-setup/tree/complete)*
 
 ## Initialize Project with NPM
 
@@ -243,6 +245,36 @@ Now that we have modified our files to create a basic React app we need to make 
 
   > Setting `devtool` to `'eval-source-map'` adds a source map to your bundle.  This means that when you pause your code with the debugger the code you will be looking at will look like the code you've written instead of the often more confusing bundle code.
 
+Once you have made these changes the `webpack.config.js` file should now look like this
+```javascript
+const path = require('path');
+
+module.exports = {
+
+  entry: path.resolve(__dirname, 'client/index.js'),
+  output: {
+    filename: 'bundle.js',
+    path: path.resolve(__dirname, 'public'),
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env', '@babel/preset-react']
+          }
+        }
+      }
+    ]
+  },
+  mode: 'development',
+  devtool: 'eval-source-map'
+};
+```
+### Update Our NPM Scripts
 - In `package.json` we are going to slightly modify our build script and add a  start script to make development easier. Modify the `"scripts"` parameter so it looks like this
   ```
   "scripts": {
@@ -263,10 +295,11 @@ Now that we have modified our files to create a basic React app we need to make 
   ```
   npm run build
   ```
-- Lets start up our development server
+- In a new terminal lets start up our development server
   ```
   npm start
   ```
+A browser window should automatically open taking you to your React App.
 ## Congratulations! You've set up a React development environnement from scratch! 🎉
 
 *Remember that there are many different ways to configure all of these tools and depending on your projects needs you may need add/modify various parts of the configuration. This is not meant to be an exhaustive or definitive guide instead the hope is that you are left better understanding what the different parts of the tool-chain are doing, how to configure these tools and why those configurations are necessary*
